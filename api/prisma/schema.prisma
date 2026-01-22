@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,19 +13,23 @@ datasource db {
 }
 
 model Products {
-  id          String      @id @default(uuid())
+  id          String              @id @default(uuid())
   name        String
-  slug        String      @unique
+  slug        String              @unique
   images      ProductImages[]
   categories  ProductCategories[]
-  price       Float       @default(0)
-  isMember    Boolean     @default(false)
-  isPreOrder  Boolean     @default(false)
+  price       Float               @default(0)
+  isMember    Boolean             @default(false)
+  isPreOrder  Boolean             @default(false)
   downPayment Float?
   description String?
   weight      Int
   year        Int
   grade       GundamGrades
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@map("products")
 }
@@ -40,31 +43,41 @@ enum GundamGrades {
 }
 
 model ProductImages {
-  id          String      @id @default(uuid())
-  productId   String
-  product     Products    @relation(fields: [productId], references: [id])
-  imgUrl      String
+  id        String   @id @default(uuid())
+  productId String
+  product   Products @relation(fields: [productId], references: [id])
+  imgUrl    String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@map("product_images")
 }
 
 model CategoryList {
-  id          String     @id @default(uuid())
-  name        String
-  slug        String     @unique
-  products    ProductCategories[]
+  id       String              @id @default(uuid())
+  name     String
+  slug     String              @unique
+  products ProductCategories[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@map("category_list")
 }
 
 model ProductCategories {
-  id          String     @id @default(uuid())
-  productId   String
-  product     Products   @relation(fields: [productId], references: [id])
-  categoryId  String
-  categories  CategoryList @relation(fields: [categoryId], references: [id])
+  id         String       @id @default(uuid())
+  productId  String
+  product    Products     @relation(fields: [productId], references: [id])
+  categoryId String
+  categories CategoryList @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@map("product_categories")
 }
-
-
